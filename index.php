@@ -229,7 +229,7 @@ font-family:courier;
    case "logout":?>
         <div class="ey"><?php
 	       session_destroy();
-	       echo "Loged out<br><br><a href=index.php>Home Page<a>";
+	       header( 'Location: index.php' ) ;
       ?></div><?php
 	break;
 	case "edit-dbprfl":?>
@@ -244,7 +244,7 @@ font-family:courier;
                 || ($_FILES["photo"]["type"] == "image/pjpeg")
                 || ($_FILES["photo"]["type"] == "image/x-png")
                 | ($_FILES["photo"]["type"] == "image/png"))
-                && ($_FILES["photo"]["size"] < 20000)
+                && ($_FILES["photo"]["size"] < 30000)
                 && in_array($extension, $allowedExts))
                 {
                     if ($_FILES["photo"]["error"] > 0)
@@ -310,12 +310,22 @@ font-family:courier;
                     $sql="INSERT INTO persons (Login, Password, Email, FirstName, LastName, Active, Role) VALUES (
                     '$_POST[login]','$_POST[passwd]','$_POST[email]',
                     '$_POST[firstname]','$_POST[lastname]','1','usr')";
-                
                     if (!mysqli_query($con,$sql)){
                         die('Error: ' . mysqli_error());
                     }
                     mysqli_close($con);
-                echo "1 record added<br><br><a href=index.php>Home Page<a>";
+                    $con=mysqli_connect("localhost","admin","qazwsx","my_db");
+                    if (mysqli_connect_errno()){
+                        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                    }
+                    $result = mysqli_query($con,"SELECT * FROM persons
+                    WHERE login='$_POST[login]'");
+                    $row = mysqli_fetch_array($result);
+                    $_SESSION['admin']=$row["Role"];
+                    $_SESSION['PID']=$row["PID"];
+                    mysqli_query($con,"UPDATE persons SET LVIS_DATE=NOW() WHERE PID='$row[PID]'");
+                    mysqli_close($con);
+                    header( 'Location: index.php?falsepass=2' ) ;                
                 }
             }
             else{
@@ -404,7 +414,7 @@ font-family:courier;
                 }
             }
             mysqli_close($con);
-            echo "Role has been updated<br><a href=index.php>Home Page</a>";
+            header( 'Location: index.php?page=adminpg' ) ;
         ?></div><?php
    break;
    case "edit":?>
@@ -491,9 +501,10 @@ font-family:courier;
             $row = mysqli_fetch_array($result);
             echo "<h2>" . $row['ArtTitle'] . "</h2>";
             echo "<p>" . $row['ArtCont'] . "</p><br>";
+            if(isset($_SESSION['admin'])){
             if($_SESSION['admin']=='mod'
             || $_SESSION['admin']=='adm') {echo "<a href=index.php?page=delete&ID=" . $row['ID'] . ">Delete</a>&nbsp;&nbsp;&nbsp;";
-            echo "<a href=index.php?page=edit&ID=" . $row['ID'] . ">Edit</a>";}
+            echo "<a href=index.php?page=edit&ID=" . $row['ID'] . ">Edit</a>";}}
             mysqli_close($con);
     break;
     default: ?>

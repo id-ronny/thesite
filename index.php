@@ -431,14 +431,17 @@ font-family:courier;
             echo '<h1>Please Edit Article</h1><br><br>
             <form name="form_cr" action="index.php?page=edit-db" method="POST">
             <div align="left">
-                <strong>Title:</strong><br><br>
                 <input type="hidden" value="' . $row['ID'] . '" name="ID">
-                <input type="text" size="35" value="' . $row['ArtTitle'] . '" name="ArtTitle">
+                <strong>Title EN:</strong><br>
+                <input type="text" size="35" value="' . $row['ArtTitle'] . '"name="ArtTitle">
                 <br><br><strong>
-                Body:</strong><br><br>
-                <textarea cols="50" rows="6" name="ArtCont">' . $row['ArtCont'] . '
-                </textarea>
-                <br><br>
+                Body EN:</strong><br>
+                <textarea cols="50" rows="6" name="ArtCont">' . $row['ArtCont'] . '</textarea><br><br><br>
+                <strong>Title UA:</strong><br>
+                <input type="text" size="35" value="' . $row['ArtTitleUA'] . '"name="ArtTitleUA">
+                <br><br><strong>
+                Body UA:</strong><br>
+                <textarea cols="50" rows="6" name="ArtContUA">' . $row['ArtContUA'] . '</textarea><br><br>
                 <input type="submit" value="Apply"><br><br>
             </div>';
         ?></div><?php
@@ -465,7 +468,7 @@ font-family:courier;
             {
                 echo "Failed to connect to MySQL: " . mysqli_connect_error();
             }
-            $sql="INSERT INTO articles (ArtTitle, ArtCont) VALUES ('$_POST[ArtTitle]','$_POST[ArtCont]')";
+            $sql="INSERT INTO articles (ArtTitle, ArtCont, ArtTitleUA,ArtContUA) VALUES ('$_POST[ArtTitle]','$_POST[ArtCont]','$_POST[ArtTitleUA]','$_POST[ArtContUA]')";
             if (!mysqli_query($con,$sql))
             {
                 die('Error: ' . mysqli_error());
@@ -479,11 +482,16 @@ font-family:courier;
             <h1>Please Add Article</h1><br><br>
             <form name="form_cr" action="index.php?page=create-db" method="POST">
             <div align="left">
-                <strong>Title:</strong><br><br>
+                <strong>Title EN:</strong><br>
                 <input type="text" size="35" name="ArtTitle">
                 <br><br><strong>
-                Body:</strong><br><br>
-                <textarea cols="50" rows="6" name="ArtCont"></textarea><br><br>
+                Body EN:</strong><br>
+                <textarea cols="50" rows="6" name="ArtCont"></textarea><br><br><br>
+                <strong>Title UA:</strong><br>
+                <input type="text" size="35" name="ArtTitleUA">
+                <br><br><strong>
+                Body UA:</strong><br>
+                <textarea cols="50" rows="6" name="ArtContUA"></textarea><br><br>
                 <input type="submit" value="Add"><br><br>
             </div>
                 </form>

@@ -59,6 +59,7 @@ font-family:courier;
         else if(isset($row["Role"])){
             $_SESSION['admin']=$row["Role"];
             $_SESSION['PID']=$row["PID"];
+            $_SESSION['login']=$row["Login"];
             mysqli_query($con,"UPDATE persons SET LVIS_DATE=NOW() WHERE PID='$row[PID]'");
             mysqli_close($con);   
         }
@@ -472,6 +473,13 @@ font-family:courier;
             $result = mysqli_query($con,"SELECT * FROM articles WHERE ID='$x'");
             $row = mysqli_fetch_array($result);
             mysqli_close($con);
+            if(isset($_SESSION['admin'])){
+                if($_SESSION['admin']=='adm') {
+                    echo "<a href=index.php?page=delallcom&ID=" . $_GET['ID'] . ">"; 
+                    if ($_SESSION['lang']=='eng') {print("Reset voting");} else {print("Обнулити голосування");}
+                    echo "</a><br><br>";
+                }
+                }
             echo '<h1>' . $array['4'][$_SESSION['lang']] . '</h1><br><br>
             <form name="form_cr" action="index.php?page=edit-db" method="POST">
             <div align="left">
@@ -549,20 +557,96 @@ font-family:courier;
             {
                 echo "Failed to connect to MySQL: " . mysqli_connect_error();
             }
+            $result = mysqli_query($con,"SELECT * FROM votes WHERE ID='$_GET[ID]' AND login='$_SESSION[login]'");
+            $row = mysqli_fetch_array($result);
+            if ($row['score']>'0') {
+                if ($_SESSION['lang']=='eng') {print("Your mark:");} else {print("Ваша оцінка:");}echo "&nbsp;&nbsp;-&nbsp;&nbsp;" . $row['score'];?>
+                <form name="form_a" action="index.php?page=deletemark" method="POST">
+                <input type="hidden" value="<?php echo $row['VID']; ?>" name="VID">
+                <input type="submit"  value="<?echo $array['3'][$_SESSION['lang']];?>"></form><?php
+            } else {
+                if ($_SESSION['lang']=='eng') {print("<SCRIPT>function myFunction(){alert(\"Thanks for voting!\");}</SCRIPT>Vote:");} else {print("<SCRIPT>function myFunction(){alert(\"Дякуємо за вашу оцінку!\");}</SCRIPT>Голосувати:");}
+            ?><form name="form_cr" action="index.php?page=vote" method="POST">
+            <input type="hidden" value="<?php print($_GET['ID']) ?>" name="ID">
+            <input type="hidden" value="<?php print($_SESSION['login']) ?>" name="login">
+            <select name="score">
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+            </select>
+            <input type="submit" onclick="myFunction()" value="<?echo $array['21'][$_SESSION['lang']];?>"></form><?php
+            }
+            $result = mysqli_query($con,"SELECT score FROM votes WHERE ID='$_GET[ID]'");
+            $i='0'; $score='0';
+            while($row = mysqli_fetch_array($result))
+            {
+                $score = $score + $row['score'];
+                $i++;
+            }
             $x = intval($_GET['ID']);
             $result = mysqli_query($con,"SELECT * FROM articles WHERE ID='$x'");
             $row = mysqli_fetch_array($result);
-            if ($_SESSION['lang']=='eng') {
-                echo "<h2>" . $row['ArtTitle'] . "</h2>";
-                echo "<p>" . $row['ArtCont'] . "</p><br>";
+            if ($i>'0') {
+                if ($_SESSION['lang']=='eng') {
+                    echo "<h2>" . $row['ArtTitle'] . "</h2>";
+                    echo "<i>Total votes - ". $i ."<br>Average mark - " . $score/$i . "</i><br>";
+                    echo "<p>" . $row['ArtCont'] . "</p><br>";
+                } else {
+                    echo "<h2>" . $row['ArtTitleUA'] . "</h2>";
+                    echo "<i>Всього голосів - ". $i ."<br>Середня оцінка - " . $score/$i . "</i><br>";
+                    echo "<p>" . $row['ArtContUA'] . "</p>";
+                }
             } else {
-                echo "<h2>" . $row['ArtTitleUA'] . "</h2>";
-                echo "<p>" . $row['ArtContUA'] . "</p><br>";
+                if ($_SESSION['lang']=='eng') {
+                    echo "<h2>" . $row['ArtTitle'] . "</h2>";
+                    echo "<i>Nobody voted for this yet</i><br>";
+                    echo "<p>" . $row['ArtCont'] . "</p><br>";
+                } else {
+                    echo "<h2>" . $row['ArtTitleUA'] . "</h2>";
+                    echo "<i>За цей метріал ще ніхто не голосував</i><br>";
+                    echo "<p>" . $row['ArtContUA'] . "</p>";
+                }
             }
+            
+
+            
+            if ($_SESSION['lang']=='eng') {print("<h3>Leave comment:</h3>");} else {print("<h3>Коментувати:</h3>");}?><strong>
+                <form name="form_cr" action="index.php?page=comcre" method="POST">
+                <input type="hidden" value="<?php print($_GET['ID']) ?>" name="ID">
+                <input type="hidden" value="<?php print($_SESSION['login']) ?>" name="login">
+                <input type="hidden" value="<?php print($_SESSION['PID']) ?>" name="PID">
+                <?echo $array['25'][$_SESSION['lang']];?>:</strong><br>
+                <input type="text" size="35" name="ComTitle">
+                <br><br><strong>
+                <?echo $array['26'][$_SESSION['lang']];?>:</strong><br>
+                <textarea cols="50" rows="4" name="ComCont"></textarea><br>
+                <input type="submit" value="<?echo $array['21'][$_SESSION['lang']];?>"><br><br>
+                </form>
+            <?php
+            $result = mysqli_query($con,"SELECT * FROM coments WHERE ID='$_GET[ID]'");
+            while($row = mysqli_fetch_array($result)){
+                echo "<b><a href=index.php?page=viewprfl&PID=" . $row['PID'] . ">" . $row['login'] . "</a></b>  " . $row['ComDate'] . "<br>";
+                echo "<b>" . $row['ComTitle'] . "</b><br>";
+                echo $row['ComCont'] . "<br><br>";
+                if(isset($_SESSION['admin'])){
+                if($_SESSION['admin']=='adm') {
+                    echo "<a href=index.php?page=deletecom&CID=" . $row['CID'] . ">"; 
+                    if ($_SESSION['lang']=='eng') {print("Delete comment");} else {print("Видалити коментар");}
+                    echo "</a><br><br>";
+                }
+                }
+            }    
+
             if(isset($_SESSION['admin'])){
             if($_SESSION['admin']=='mod'
-            || $_SESSION['admin']=='adm') {echo "<a href=index.php?page=delete&ID=" . $row['ID'] . ">" . $array['3'][$_SESSION['lang']] . "</a>&nbsp;&nbsp;&nbsp;";
-            echo "<a href=index.php?page=edit&ID=" . $row['ID'] . ">" . $array['22'][$_SESSION['lang']] . "</a>";}}
+            || $_SESSION['admin']=='adm') {echo "<a href=index.php?page=delete&ID=" . $_GET['ID'] . ">" . $array['3'][$_SESSION['lang']] . "</a>&nbsp;&nbsp;&nbsp;";
+            echo "<a href=index.php?page=edit&ID=" . $_GET['ID'] . ">" . $array['22'][$_SESSION['lang']] . "</a>";}}
+            if (!mysqli_query($con,$sql))
+            {
+                die('Error: ' . mysqli_error());
+            }
             mysqli_close($con);
     break;
     case "langselect":
@@ -574,6 +658,75 @@ font-family:courier;
         $temp = $_SESSION['lang'];
         echo $temp;
         header('Location: ' . $_SERVER['HTTP_REFERER']);
+        //header('Location: index.php');
+    break;
+    case "comcre":
+        $con=mysqli_connect("localhost","admin","qazwsx","my_db");
+                if (mysqli_connect_errno())
+                {
+                    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                }
+                if (array_key_exists('ComTitle', $_POST)) {
+                    $string = $_POST["ComCont"];
+                    $string = substr($string,0,16);
+                    $string = substr($string,0,strrpos($string," "));
+                }
+                else{
+                    $string = $_POST["ComTitle"];
+                }
+                $sql="INSERT INTO coments (ID, ComTitle, ComCont, login, ComDate, PID) VALUES (
+                    '$_POST[ID]', '$string', '$_POST[ComCont]', '$_POST[login]', NOW(), '$_POST[PID]')";
+                    if (!mysqli_query($con,$sql)){
+                        die('Error: ' . mysqli_error());
+                    }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    break;
+    case "vote":
+        $con=mysqli_connect("localhost","admin","qazwsx","my_db");
+                if (mysqli_connect_errno())
+                {
+                    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                }
+                $sql="INSERT INTO votes (ID, score, login) VALUES (
+                    '$_POST[ID]', '$_POST[score]', '$_POST[login]')";
+                    if (!mysqli_query($con,$sql)){
+                        die('Error: ' . mysqli_error());
+                    }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    break;
+    case "deletecom":
+        $con=mysqli_connect("localhost","admin","qazwsx","my_db");
+            if (mysqli_connect_errno())
+            {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+        mysqli_query($con,"DELETE FROM coments WHERE CID='$_GET[CID]'");
+        mysqli_close($con);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        ?><SCRIPT>alert("DONE")</SCRIPT><?php
+        //header('Location: index.php');
+    break;
+    case "deletemark":
+        $con=mysqli_connect("localhost","admin","qazwsx","my_db");
+            if (mysqli_connect_errno())
+            {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+        mysqli_query($con,"DELETE FROM votes WHERE VID='$_POST[VID]'");
+        mysqli_close($con);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        //header('Location: index.php');
+    break;
+    case "delallcom":
+        $con=mysqli_connect("localhost","admin","qazwsx","my_db");
+            if (mysqli_connect_errno())
+            {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+        mysqli_query($con,"DELETE FROM votes WHERE ID='$_GET[ID]'");
+        mysqli_close($con);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        ?><SCRIPT>alert("DONE")</SCRIPT><?php
         //header('Location: index.php');
     break;
     case "adminlang":?>

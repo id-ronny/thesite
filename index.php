@@ -27,24 +27,25 @@ font-family:courier;
 
 <body><?php	
     try {
-    $dbh = new PDO("mysql:host=localhost;dbname=my_db", 'admin', 'qazwsx');
-    $sql = "SELECT * FROM std_texts";
-    $dbh->query($sql);        
-    $stmt = $dbh->query($sql);
-    //$row = $stmt->fetch(PDO::FETCH_ASSOC);
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC))
-    {
-    $array[]=$row;
-    
+        $dbh = new PDO("mysql:host=localhost;dbname=my_db", 'admin', 'qazwsx');
+        $sql = "SELECT * FROM std_texts";
+        $dbh->query($sql);        
+        $stmt = $dbh->query($sql);
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $stext = "t" . $row["PID"];
+            if ($_SESSION['lang']=='eng') {
+                $array[$stext]=$row["eng"];
+            } else {
+                $array[$stext]=$row["ukr"];
+            }
+        }
+        extract($array);
+        // print_r($array);
+        $dbh = null;
     }
-    //print_r($array);
-    $dbh = null;
+    catch(PDOException $e){
+        echo $e->getMessage();
     }
-        catch(PDOException $e)
-    {
-    echo $e->getMessage();
-    }
-
     if(isset($_GET["usr"]) || isset($_GET["passwd"])){
         $con=mysqli_connect("localhost","admin","qazwsx","my_db");
         if (mysqli_connect_errno()){
@@ -73,13 +74,13 @@ font-family:courier;
                 <div class="ex">
                     <a href="index.php"><img src="img/images.jpeg" width="115" height="115" alt="image"/></a>      
                     <div style="text-align:right;position:relative;float:right;top:25px;margin-right:30px">
-                        <strong><?echo $array['18'][$_SESSION['lang']];?></strong><br />
-                        <a href="index.php?page=viewprfl&PID=<?php echo $_SESSION["PID"];?>"><?echo $array['19'][$_SESSION['lang']];?></a>
-                        <a href="index.php?page=editprfl&PID=<?php echo $_SESSION["PID"];?>"><?echo $array['20'][$_SESSION['lang']];?></a><br />
-                        <a href="index.php?page=create"><?echo $array['17'][$_SESSION['lang']];?></a>
+                        <strong><?php echo $t1; ?></strong><br />
+                        <a href="index.php?page=viewprfl&amp;PID=<?php echo $_SESSION["PID"];?>"><?php echo $t2; ?></a>
+                        <a href="index.php?page=editprfl&amp;PID=<?php echo $_SESSION["PID"];?>"><?php echo $t3; ?></a><br />
+                        <a href="index.php?page=create"><?php echo $t4; ?></a>
                         <a href="index.php?page=adminlang">Ukr/Eng</a><br />
-                        <a href="index.php?page=adminpg"><?echo $array['10'][$_SESSION['lang']];?></a>
-                        <a href="index.php?page=logout"><?echo $array['16'][$_SESSION['lang']];?></a><br />
+                        <a href="index.php?page=adminpg"><?php echo $t13 ;?></a>
+                        <a href="index.php?page=logout"><?php echo $t5 ;?></a><br />
                     </div>
                     <div style="position:relative;top:-20px;margin-left:115px">
                         <a href="index.php?page=langselect"><img src="img/ukraine-flag.png" width="20" height="15" alt="image"/></a>
@@ -91,11 +92,11 @@ font-family:courier;
                 <div class="ex">
                     <a href="index.php"><img src="img/images.jpeg" width="115" height="115" alt="image"/></a>      
                     <div style="text-align:right;position:relative;float:right;top:25px;margin-right:30px">
-                        <strong><?echo $array['15'][$_SESSION['lang']];?></strong><br />
-                        <a href="index.php?page=viewprfl&PID=<?php echo $_SESSION["PID"];?>"><?echo $array['19'][$_SESSION['lang']];?></a>
-                        <a href="index.php?page=editprfl&PID=<?php echo $_SESSION["PID"];?>"><?echo $array['20'][$_SESSION['lang']];?></a><br />
-                        <a href="index.php?page=create"><?echo $array['17'][$_SESSION['lang']];?></a><br />
-                        <a href="index.php?page=logout"><?echo $array['16'][$_SESSION['lang']];?></a><br />
+                        <strong><?php echo $t7; ?></strong><br />
+                        <a href="index.php?page=viewprfl&amp;PID=<?php echo $_SESSION["PID"];?>"><?php echo $t2; ?></a>
+                        <a href="index.php?page=editprfl&amp;PID=<?php echo $_SESSION["PID"];?>"><?php echo $t3; ?></a><br />
+                        <a href="index.php?page=create"><?php echo $t4;?></a><br />
+                        <a href="index.php?page=logout"><?php echo $t5;?></a><br />
                     </div>
                     <div style="position:relative;top:-20px;margin-left:115px">
                         <a href="index.php?page=langselect"><img src="img/ukraine-flag.png" width="20" height="15" alt="image"/></a>
@@ -108,9 +109,9 @@ font-family:courier;
                     <a href="index.php"><img src="img/images.jpeg" width="115" height="115" alt="image"/></a>      
                     <div style="text-align:right;position:relative;float:right;top:25px;margin-right:30px">
                         <strong>Welcome User!</strong><br />
-                        <a href="index.php?page=viewprfl&PID=<?php echo $_SESSION["PID"];?>"><?echo $array['20'][$_SESSION['lang']];?></a>
-                        <a href="index.php?page=editprfl&PID=<?php echo $_SESSION["PID"];?>"><?echo $array['20'][$_SESSION['lang']];?></a><br />
-                        <a href="index.php?page=logout">Logout</a><br />
+                        <a href="index.php?page=viewprfl&amp;PID=<?php echo $_SESSION["PID"];?>"><?php echo $t2; ?></a>
+                        <a href="index.php?page=editprfl&amp;PID=<?php echo $_SESSION["PID"];?>"><?php echo $t3; ?></a><br />
+                        <a href="index.php?page=logout"><?php echo $t5; ?></a><br />
                     </div>
                     <div style="position:relative;top:-20px;margin-left:115px">
                         <a href="index.php?page=langselect"><img src="img/ukraine-flag.png" width="20" height="15" alt="image"/></a>
@@ -123,26 +124,28 @@ font-family:courier;
         <div class="ex">
             <a href="index.php"><img src="img/images.jpeg" width="115" height="115" alt="image"/></a>               
             <div style="text-align:right;position:relative;float:right;top:15px;margin-right:30px"><?php
-                if(isset($_GET['ID'])){echo '<form action="index.php" method="get">';
-                echo '<input type="hidden" value="' . $_GET['ID'] . '" name="ID">';
-                echo '<input type="hidden" value="view" name="page">';}      
-                else { echo '<form action="index.php" method="get">';}?>
-                <?echo $array['13'][$_SESSION['lang']];?>:<input type="text" name="usr"><br />
-                <?echo $array['12'][$_SESSION['lang']];?>:<input type="password" name="passwd"><br /><?php
+                if(isset($_GET['ID'])){echo '<form action="index.php" method="get"><div>';
+                    echo '<div><input type="hidden" value="' . $_GET['ID'] . '" name="ID"/>';
+                    echo '<input type="hidden" value="view" name="page"/>';}      
+                else { echo '<form action="index.php" method="get"><div>';}?>
+                    <?php echo $t8;?>:<input type="text" name="usr"/><br />
+                    <?php echo $t9;?>:<input type="password" name="passwd"/><br /><?php
                 if ($_GET["falsepass"]=='1') {
                     echo '<span style="color:red;font-size:12px">Incorrect username or password!</span><br />';
                 } else {
                     echo '<span style="color:red;font-size:12px">Your account is inactive! Pealse contact admin</span><br />';
                 }?>
                 <div style="position:relative;float:right;top:-1px;right:0px;">    
-                    <input type="submit" value="<?echo $array['8'][$_SESSION['lang']];?>">
+                    <input type="submit" value="<?php echo $t11; ?>"/>
                 </div>    
-                </form>            
+                </div></form>            
                 <div style="position:relative;float:right;top:-1px;right:15px;">    
                     <form action="index.php" method="get">
-                    <input type="hidden" size="30" name="page" value="createprfl">
-                    <input type="submit" value="<?echo $array['11'][$_SESSION['lang']];?>">
-                </form>
+                    <div>
+                        <input type="hidden" size="30" name="page" value="createprfl"/>
+                        <input type="submit" value="<?php echo $t10; ?>"/>
+                    </div>
+                    </form>
                 </div>
                 </div>
                 <div style="position:relative;top:-20px;margin-left:115px">
@@ -154,21 +157,21 @@ font-family:courier;
         <div class="ex">
             <a href="index.php"><img src="img/images.jpeg" width="115" height="115" alt="image"/></a>      
             <div style="text-align:right;position:relative;float:right;top:15px;margin-right:30px"><?php
-                if(isset($_GET['ID'])){echo '<form action="index.php" method="get">';
-                echo '<input type="hidden" value="' . $_GET['ID'] . '" name="ID">';
-                echo '<input type="hidden" value="view" name="page">';}     
-                else { echo '<form action="index.php" method="get">';}?>
-                <?echo $array['13'][$_SESSION['lang']];?>: <input type="text" name="usr"><br />
-                <?echo $array['12'][$_SESSION['lang']];?>: <input type="password" name="passwd"><br /><br />
+                if(isset($_GET['ID'])){echo '<form action="index.php" method="get"><div>';
+                echo '<input type="hidden" value="' . $_GET['ID'] . '" name="ID"/>';
+                echo '<input type="hidden" value="view" name="page"/>';}     
+                else { echo '<form action="index.php" method="get"><div>';}?>
+                <?php echo $t8; ?>: <input type="text" name="usr"/><br />
+                <?php echo $t9; ?>: <input type="password" name="passwd"/><br /><br />
                 <div style="position:relative;float:right;top:-1px;right:0px;">    
-                    <input type="submit" value="<?echo $array['8'][$_SESSION['lang']];?>">
+                    <input type="submit" value="<?php echo $t11; ?>"/>
                 </div>    
-                </form>            
+                </div></form>            
                 <div style="position:relative;float:right;top:-1px;right:15px;">    
-                    <form action="index.php" method="get">
-                    <input type="hidden" size="30" name="page" value="createprfl">
-                    <input type="submit" value="<?echo $array['11'][$_SESSION['lang']];?>">
-                </form>
+                    <form action="index.php" method="get"><div>
+                    <input type="hidden" size="30" name="page" value="createprfl"/>
+                    <input type="submit" value="<?php echo $t10; ?>"/>
+                </div></form>
                 </div>
                 </div>
             <div style="position:relative;top:-20px;margin-left:115px">
@@ -190,12 +193,12 @@ font-family:courier;
 	     $x = intval($_GET["PID"]);
 	     $result = mysqli_query($con,"SELECT * FROM persons WHERE PID='$x'");
 	     $row = mysqli_fetch_array($result);
-	     echo "<img src=\"" . $row["Image"] . "\" alt=\"image\"><br />";
-         echo "<h3>" . $row["FirstName"] . "&nbsp" . $row["LastName"] ."</h3>";
-	     echo "<p> e-mail:" . "&nbsp" . $row["Email"] . "</p>";
-         echo "<p>" . $array['7'][$_SESSION['lang']] . ":&nbsp" . $row["REG_DATE"] . "</p>";
-	     echo "<p>" . $array['6'][$_SESSION['lang']] . ":&nbsp" . $row["LVIS_DATE"] . "</p>";
-	     echo "<a href=index.php?page=deleteprfl&PID=" . $x . ">" . $array['5'][$_SESSION['lang']] . "</a>";
+	     echo "<img src=\"" . $row["Image"] . "\" alt=\"image\"/><br />";
+         echo "<h3>" . $row["FirstName"] . "&nbsp;" . $row["LastName"] ."</h3>";
+	     echo "<p> e-mail:" . "&nbsp;" . $row["Email"] . "</p>";
+         echo "<p>" . $t14 . ":&nbsp;" . $row["REG_DATE"] . "</p>";
+	     echo "<p>" . $t15 . ":&nbsp;" . $row["LVIS_DATE"] . "</p>";
+	     echo "<a href=\"index.php?page=deleteprfl&amp;PID=" . $x . "\">" . $t16 . "</a></div>";
          mysqli_close($con);
 	break;
 	case "editprfl":?>
@@ -209,25 +212,30 @@ font-family:courier;
             $result = mysqli_query($con,"SELECT * FROM persons WHERE PID='$x'");
             $row = mysqli_fetch_array($result);
             mysqli_close($con);
-            echo '<h1>' . $array['4'][$_SESSION['lang']] . '</h1>
-            <span style="color:red;font-size:12px"><img src="' . $row["Image"] . '" alt="Photo Not Added! Reqirements: JPEG 200x200 to 300x300"></span><br /><br />';
+            echo '<h1>' . $t17 . '</h1>
+            <span style="color:red;font-size:12px"><img src="' . $row["Image"] . '" alt="Photo Not Added! Reqirements: JPEG 200x200 to 300x300"/></span><br /><br />';
             if($row["Image"]>'0'){
-                echo '<a href="index.php?page=deletepic&PID=' . $row["PID"] . '">' . $array['3'][$_SESSION['lang']] . '</a><br /><br />';
+                echo '<a href="index.php?page=deletepic&amp;PID=' . $row["PID"] . '">' . $t18 . '</a><br /><br />';
             }
             echo   '<form name="form_cr" action="index.php?page=edit-dbprfl" method="post" enctype="multipart/form-data">
-            <div align="left">
-            <input type="hidden" size="30" name="Image" value="' . $row["Image"] . '">
-            <input type="hidden" size="30" name="PID" value="' . $row["PID"] . '">
-            <input type="hidden" size="30" name="login" value="' . $row["Login"] . '">
-            <label for="firstname">' . $array['1'][$_SESSION['lang']] . ':</label><br />
-            <input type="text" size="30" name="firstname" value="' . $row["FirstName"] . '"><br /><br />
-            <label for="lastname">' . $array['2'][$_SESSION['lang']] . ':</label><br />
-            <input type="text" size="30" name="lastname" value="' . $row["LastName"] . '"><br /><br />
-            <label for="email">Email:</label><br />
-            <input type="text" size="30" name="email" value="' . $row["Email"] . '"><br /><br />
-            <label for="photo">' . $array['0'][$_SESSION['lang']] . ':</label><br />
-            <input type="file" name="photo" id="photo"><br /><br />
-            <input type="submit" value="' . $array['21'][$_SESSION['lang']] . '"><br />
+            <fieldset>
+            <input type="hidden" size="30" name="Image" value="' . $row["Image"] . '"/>
+            <input type="hidden" size="30" name="PID" value="' . $row["PID"] . '"/>
+            <input type="hidden" size="30" name="login" value="' . $row["Login"] . '"/>
+            <label>' . $t19 . ':</label><br />
+            <input type="text" size="30" name="firstname" value="' . $row["FirstName"] . '"/><br /><br />
+            <label>' . $t20 . ':</label><br />
+            <input type="text" size="30" name="lastname" value="' . $row["LastName"] . '"/><br /><br />
+            <label>Email:</label><br />
+            <input type="text" size="30" name="email" value="' . $row["Email"] . '"/><br /><br />
+            <label>' . $t21 . ':</label><br />
+            <input type="file" name="photo" id="photo"/><br /><br />
+            <input type="submit" value="' . $t22 . '"/><br />
+        </fieldset></form>
+        <p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+      src="http://www.w3.org/Icons/valid-xhtml11" alt="Valid XHTML 1.1" height="31" width="88" /></a>
+  </p>
         </div>';
 	break;
 	case "delete":?>
@@ -279,15 +287,12 @@ font-family:courier;
 	case "edit-dbprfl":?>
 	   <div class="ey"><?php
             if(isset($_FILES["photo"]["name"])){
-                $allowedExts = array("gif", "jpeg", "jpg", "png");
+                $allowedExts = array("jpeg", "jpg");
                 $file = explode(".", $_FILES["photo"]["name"]);
                 $extension = end($file);
-                if ((($_FILES["photo"]["type"] == "image/gif")
-                || ($_FILES["photo"]["type"] == "image/jpeg")
+                if ((($_FILES["photo"]["type"] == "image/jpeg")
                 || ($_FILES["photo"]["type"] == "image/jpg")
-                || ($_FILES["photo"]["type"] == "image/pjpeg")
-                || ($_FILES["photo"]["type"] == "image/x-png")
-                | ($_FILES["photo"]["type"] == "image/png"))
+                || ($_FILES["photo"]["type"] == "image/pjpeg"))
                 && ($_FILES["photo"]["size"] < 30000)
                 && in_array($extension, $allowedExts))
                 {
@@ -333,7 +338,6 @@ font-family:courier;
                 mysqli_query($con,"UPDATE persons SET FirstName='$_POST[firstname]', LastName='$_POST[lastname]', Email='$_POST[email]' WHERE PID='$x'");
             }
             header( 'Location: index.php' ) ;
-            //echo "Info updated<br /><br /><a href="index.php">Home Page</a>";
             mysqli_close($con);
         ?></div><?php
 	break;
@@ -381,23 +385,23 @@ font-family:courier;
 	break;
 	case "createprfl":?>
         <div class="ey">
-            <h1><?echo $array['4'][$_SESSION['lang']];?></h1><br /><br />
+            <h1><?php echo $t17; ?></h1><br /><br />
             <form name="form_cr" action="index.php?page=create-dbprfl" method="post">
-            <div align="left">
-                <label for="firstname"><?echo $array['1'][$_SESSION['lang']];?>:</label><br />
-                <input type="text" size="30" name="firstname"><br /><br />
-                <label for="lastname"><?echo $array['2'][$_SESSION['lang']];?>:</label><br />
-                <input type="text" size="30" name="lastname"><br /><br />
-                <label for="email">Email:</label><br />
-                <input type="text" size="30" name="email"><br /><br />
-                <label for="passwd"><?echo $array['12'][$_SESSION['lang']];?>:</label><br />
-                <input type="password" size="30" name="passwd"><br /><br />
-                <label for="passwdcnf"><?echo $array['12'][$_SESSION['lang']];?>-2:</label><br />
-                <input type="password" size="30" name="passwdcnf"><br /><br />
-                <label for="login"><?echo $array['13'][$_SESSION['lang']];?>:</label><br />
-                <input type="text" name="login" size="30"><br /><br />
-                <input type="submit" value="<?echo $array['11'][$_SESSION['lang']];?>"><br />
-            </div>
+            <fieldset>
+                <label><?php echo $t19; ?>:</label><br />
+                <input type="text" size="30" name="firstname"/><br /><br />
+                <label><?php echo $t20; ?>:</label><br />
+                <input type="text" size="30" name="lastname"/><br /><br />
+                <label>Email:</label><br />
+                <input type="text" size="30" name="email"/><br /><br />
+                <label><?php echo $t9; ?>:</label><br />
+                <input type="password" size="30" name="passwd"/><br /><br />
+                <label><?php echo $t9; ?>-2:</label><br />
+                <input type="password" size="30" name="passwdcnf"/><br /><br />
+                <label><?php echo $t8 ;?>:</label><br />
+                <input type="text" name="login" size="30"/><br /><br />
+                <input type="submit" value="<?php echo $t22; ?>"/><br />
+            </fieldset>
                 </form>
         </div><?php
     break;
@@ -422,18 +426,18 @@ font-family:courier;
             <th>Set</th>
             <th>Del</th>
             </tr>
-            <tr><?php 
+            <?php 
             while($row = mysqli_fetch_array($result))
-            echo "<td>" . $row["PID"] . "</td>
+            echo "<tr><td>" . $row["PID"] . "</td>
             <td>" . $row["Login"] . "</td>
             <td>"  . $row["Role"] . "</td>
             <td>"  . $row["Active"] . "</td>
-            <td><a href=\"index.php?page=updstat&role=usr&PID="  . $row["PID"] . "\">USR</a></td>
-            <td><a href=\"index.php?page=updstat&role=mod&PID="  . $row["PID"] . "\">MOD</a></td>
-            <td><a href=\"index.php?page=updstat&role=adm&PID="  . $row["PID"] . "\">ADM</a></td>
-            <td><a href=\"index.php?page=updstat&active=1&PID="  . $row["PID"] . "\">ACTV</a></td>
-            <td><a href=\"index.php?page=updstat&active=0&PID="  . $row["PID"] . "\">INAC</a></td>
-            <td><a href=\"index.php?page=updstat&active=2&PID="  . $row["PID"] . "\">x</a></td></tr>";
+            <td><a href=\"index.php?page=updstat&amp;role=usr&amp;PID="  . $row["PID"] . "\">USR</a></td>
+            <td><a href=\"index.php?page=updstat&amp;role=mod&amp;PID="  . $row["PID"] . "\">MOD</a></td>
+            <td><a href=\"index.php?page=updstat&amp;role=adm&amp;PID="  . $row["PID"] . "\">ADM</a></td>
+            <td><a href=\"index.php?page=updstat&amp;active=1&amp;PID="  . $row["PID"] . "\">ACTV</a></td>
+            <td><a href=\"index.php?page=updstat&amp;active=0&amp;PID="  . $row["PID"] . "\">INAC</a></td>
+            <td><a href=\"index.php?page=updstat&amp;active=2&amp;PID="  . $row["PID"] . "\">x</a></td></tr>";
             mysqli_close($con);?>
             </table>
         </div><?php
@@ -475,27 +479,27 @@ font-family:courier;
             mysqli_close($con);
             if(isset($_SESSION['admin'])){
                 if($_SESSION['admin']=='adm') {
-                    echo "<a href=\"index.php?page=delallcom&ID=" . $_GET['ID'] . "\">"; 
+                    echo "<a href=\"index.php?page=delallcom&amp;ID=" . $_GET['ID'] . "\">"; 
                     if ($_SESSION['lang']=='eng') {print("Reset voting");} else {print("Обнулити голосування");}
                     echo "</a><br /><br />";
                 }
                 }
-            echo '<h1>' . $array['4'][$_SESSION['lang']] . '</h1><br /><br />
+            echo '<h1>' . $t16 . '</h1><br /><br />
             <form name="form_cr" action="index.php?page=edit-db" method="post">
-            <div align="left">
-                <input type="hidden" value="' . $row['ID'] . '" name="ID">
-                <strong>' . $array['23'][$_SESSION['lang']] . ':</strong><br />
-                <input type="text" size="35" value="' . $row['ArtTitle'] . '"name="ArtTitle">
+            <fieldset>
+                <input type="hidden" value="' . $row['ID'] . '" name="ID"/>
+                <strong>' . $t24 . ':</strong><br />
+                <input type="text" size="35" value="' . $row['ArtTitle'] . '" name="ArtTitle"/>
                 <br /><br /><strong>
-                ' . $array['24'][$_SESSION['lang']] . ':</strong><br />
+                ' . $t25 . ':</strong><br />
                 <textarea cols="50" rows="6" name="ArtCont">' . $row['ArtCont'] . '</textarea><br /><br /><br />
-                <strong>' . $array['25'][$_SESSION['lang']] . ':</strong><br />
-                <input type="text" size="35" value="' . $row['ArtTitleUA'] . '"name="ArtTitleUA">
+                <strong>' . $t26 . ':</strong><br />
+                <input type="text" size="35" value="' . $row['ArtTitleUA'] . '" name="ArtTitleUA"/>
                 <br /><br /><strong>
-                ' . $array['26'][$_SESSION['lang']] . ':</strong><br />
+                ' . $t27 . ':</strong><br />
                 <textarea cols="50" rows="6" name="ArtContUA">' . $row['ArtContUA'] . '</textarea><br /><br />
-                <input type="submit" value="' . $array['21'][$_SESSION['lang']] . '"><br /><br />
-            </div>';
+                <input type="submit" value="' . $t22 . '"/><br />
+            </fieldset></form>';
         ?></div><?php
     break;
     case "edit-db":?>
@@ -509,7 +513,6 @@ font-family:courier;
             mysqli_query($con,"UPDATE articles SET ArtTitle='$_POST[ArtTitle]', ArtCont='$_POST[ArtCont]', ArtTitleUA='$_POST[ArtTitleUA]', ArtContUA='$_POST[ArtContUA]' WHERE ID='$x'");
             
             header('Location: index.php');
-            //echo "1 record updated<br /><br /><a href="index.php">Home Page</a>";
             mysqli_close($con);
       ?></div><?php
     break;
@@ -526,27 +529,26 @@ font-family:courier;
                 die('Error: ' . mysqli_error());
             }
             header('Location: index.php');
-            //echo "1 record added<br /><br /><a href="index.php">Home Page<a>";
             mysqli_close($con);
       ?></div><?php
     break;
     case "create":?>
         <div class="ey">
-            <h1><?echo $array['17'][$_SESSION['lang']];?></h1><br /><br />
+            <h1><?php echo $t4; ?></h1><br /><br />
             <form name="form_cr" action="index.php?page=create-db" method="post">
-            <div align="left">
-                <strong><?echo $array['23'][$_SESSION['lang']];?>:</strong><br />
-                <input type="text" size="35" name="ArtTitle">
+            <fieldset>
+                <strong><?php echo $t24; ?>:</strong><br />
+                <input type="text" size="35" name="ArtTitle"/>
                 <br /><br /><strong>
-                <?echo $array['24'][$_SESSION['lang']];?>:</strong><br />
+                <?php echo $t25; ?>:</strong><br />
                 <textarea cols="50" rows="6" name="ArtCont"></textarea><br /><br /><br />
-                <strong><?echo $array['25'][$_SESSION['lang']];?>:</strong><br />
-                <input type="text" size="35" name="ArtTitleUA">
+                <strong><?php echo $t26; ?>:</strong><br />
+                <input type="text" size="35" name="ArtTitleUA"/>
                 <br /><br /><strong>
-                <?echo $array['26'][$_SESSION['lang']];?>:</strong><br />
+                <?php echo $t27; ?>:</strong><br />
                 <textarea cols="50" rows="6" name="ArtContUA"></textarea><br /><br />
-                <input type="submit" value="<?echo $array['21'][$_SESSION['lang']];?>"><br /><br />
-            </div>
+                <input type="submit" value="<?php echo $t22; ?>"/><br /><br />
+            </fieldset>
                 </form>
         </div><?php
     break;
@@ -564,11 +566,13 @@ font-family:courier;
             if ($row['score']>'0') {
                 if ($_SESSION['lang']=='eng') {print("Your mark:");} else {print("Ваша оцінка:");}echo "&nbsp;&nbsp;-&nbsp;&nbsp;" . $row['score'];?>
                 <form name="form_a" action="index.php?page=deletemark" method="post">
+                <div>
                 <input type="hidden" value="<?php echo $row['VID']; ?>" name="VID"/>
-                <input type="submit"  value="<?echo $array['3'][$_SESSION['lang']];?>"/></form><?php
+                <input type="submit"  value="<?php echo $t18; ?>"/></div></form><?php
             } else {
-                if ($_SESSION['lang']=='eng') {print("<SCRIPT>function myFunction(){alert(\"Thanks for voting!\");}</SCRIPT>Vote:");} else {print("<SCRIPT>function myFunction(){alert(\"Дякуємо за вашу оцінку!\");}</SCRIPT>Голосувати:");}
+                if ($_SESSION['lang']=='eng') {print("<script type=\"text/javascript\">function myFunction(){alert(\"Thanks for voting!\");}</script>Vote:");} else {print("<script type=\"text/javascript\">function myFunction(){alert(\"Дякуємо за вашу оцінку!\");}</script>Голосувати:");}
             ?><form name="form_cr" action="index.php?page=vote" method="post">
+            <div>
             <input type="hidden" value="<?php print($_GET['ID']) ?>" name="ID"/>
             <input type="hidden" value="<?php print($_SESSION['login']) ?>" name="login"/>
             <select name="score">
@@ -578,7 +582,7 @@ font-family:courier;
                 <option value="2">2</option>
                 <option value="1">1</option>
             </select>
-            <input type="submit" onclick="myFunction()" value="<?echo $array['21'][$_SESSION['lang']];?>"/></form><?php
+            <input type="submit" onclick="myFunction()" value="<?php echo $t22; ?>"/></div></form><?php
             }
             }
             $result = mysqli_query($con,"SELECT score FROM votes WHERE ID='$_GET[ID]'");
@@ -612,47 +616,44 @@ font-family:courier;
                     echo "<p>" . $row['ArtContUA'] . "</p>";
                 }
             }
-            
-
             if (array_key_exists('login', $_SESSION)) {
-            if ($_SESSION['lang']=='eng') {print("<h3>Leave comment:</h3>");} else {print("<h3>Коментувати:</h3>");}?><strong>
-                <form name="form_cr" action="index.php?page=comcre" method="post">
+            if ($_SESSION['lang']=='eng') {print("<h3>Leave comment:</h3>");} else {print("<h3>Коментувати:</h3>");}?>
+                <form name="form_cr" action="index.php?page=comcre" method="post"><fieldset>
                 <input type="hidden" value="<?php print($_GET['ID']); ?>" name="ID"/>
                 <input type="hidden" value="<?php print($_SESSION['login']); ?>" name="login"/>
                 <input type="hidden" value="<?php print($_SESSION['PID']); ?>" name="PID"/>
-                <?echo $array['25'][$_SESSION['lang']];?>:</strong><br />
+                <strong><?php echo $t24; ?>:</strong><br />
                 <input type="text" size="35" name="ComTitle"/>
                 <br /><br /><strong>
-                <?echo $array['26'][$_SESSION['lang']];?>:</strong><br />
+                <?php echo $t25; ?>:</strong><br />
                 <textarea cols="50" rows="4" name="ComCont"></textarea><br />
-                <input type="submit" value="<?echo $array['21'][$_SESSION['lang']];?>"/><br /><br />
-                </form>
-
-            <?php
-        }
+                <input type="submit" value="<?php echo $t22; ?>"/>
+                </fieldset>
+                </form><br /><?php
+            }
             $result = mysqli_query($con,"SELECT * FROM coments WHERE ID='$_GET[ID]'");
             while($row = mysqli_fetch_array($result)){
-                echo "<b><a href=\"index.php?page=viewprfl&PID=" . $row['PID'] . "\">" . $row['login'] . "</a></b>  " . $row['ComDate'] . "<br />";
+                echo "<b><a href=\"index.php?page=viewprfl&amp;PID=" . $row['PID'] . "\">" . $row['login'] . "</a></b>  " . $row['ComDate'] . "<br />";
                 echo "<b>" . $row['ComTitle'] . "</b><br />";
                 echo $row['ComCont'] . "<br /><br />";
                 if(isset($_SESSION['admin'])){
                 if($_SESSION['admin']=='adm') {
-                    echo "<a href=\"index.php?page=deletecom&CID=" . $row['CID'] . "\">"; 
+                    echo "<a href=\"index.php?page=deletecom&amp;CID=" . $row['CID'] . "\">"; 
                     if ($_SESSION['lang']=='eng') {print("Delete comment");} else {print("Видалити коментар");}
                     echo "</a><br /><br />";
                 }
                 }
             }    
-
             if(isset($_SESSION['admin'])){
             if($_SESSION['admin']=='mod'
-            || $_SESSION['admin']=='adm') {echo "<a href=\"index.php?page=delete&ID=" . $_GET['ID'] . "\">" . $array['3'][$_SESSION['lang']] . "</a>&nbsp;&nbsp;&nbsp;";
-            echo "<a href=\"index.php?page=edit&ID=" . $_GET['ID'] . "\">" . $array['22'][$_SESSION['lang']] . "</a>";}}
+            || $_SESSION['admin']=='adm') {echo "<a href=\"index.php?page=delete&amp;ID=" . $_GET['ID'] . "\">" . $t18 . "</a>&nbsp;&nbsp;&nbsp;";
+            echo "<a href=\"index.php?page=edit&amp;ID=" . $_GET['ID'] . "\">" . $t23 . "</a>";}}
             if (!mysqli_query($con,$sql))
             {
                 die('Error: ' . mysqli_error());
             }
             mysqli_close($con);
+        echo "</div>";
     break;
     case "langselect":
         if ($_SESSION['lang']=='ukr') {
@@ -663,7 +664,6 @@ font-family:courier;
         $temp = $_SESSION['lang'];
         echo $temp;
         header('Location: ' . $_SERVER['HTTP_REFERER']);
-        //header('Location: index.php');
     break;
     case "comcre":
         $con=mysqli_connect("localhost","admin","qazwsx","my_db");
@@ -708,8 +708,6 @@ font-family:courier;
         mysqli_query($con,"DELETE FROM coments WHERE CID='$_GET[CID]'");
         mysqli_close($con);
         header('Location: ' . $_SERVER['HTTP_REFERER']);
-        ?><SCRIPT>alert("DONE")</SCRIPT><?php
-        //header('Location: index.php');
     break;
     case "deletemark":
         $con=mysqli_connect("localhost","admin","qazwsx","my_db");
@@ -720,7 +718,6 @@ font-family:courier;
         mysqli_query($con,"DELETE FROM votes WHERE VID='$_POST[VID]'");
         mysqli_close($con);
         header('Location: ' . $_SERVER['HTTP_REFERER']);
-        //header('Location: index.php');
     break;
     case "delallcom":
         $con=mysqli_connect("localhost","admin","qazwsx","my_db");
@@ -731,8 +728,6 @@ font-family:courier;
         mysqli_query($con,"DELETE FROM votes WHERE ID='$_GET[ID]'");
         mysqli_close($con);
         header('Location: ' . $_SERVER['HTTP_REFERER']);
-        ?><SCRIPT>alert("DONE")</SCRIPT><?php
-        //header('Location: index.php');
     break;
     case "adminlang":?>
         <div class="ey"><?php
@@ -751,11 +746,12 @@ font-family:courier;
             <?php
         while($row = $stmt->fetch(PDO::FETCH_ASSOC))
         {
-        echo "<td>" . $row["PID"] . "</td>
+        echo "<tr><td>" . $row["PID"] . "</td>
             <td>" . $row["ukr"] . "</td>
             <td>"  . $row["eng"] . "</td>
-            <td><a href=\"index.php?page=txtedit&PID="  . $row["PID"] . "\">EDIT</a></td></tr>";
+            <td><a href=\"index.php?page=txtedit&amp;PID="  . $row["PID"] . "\"> EDIT </a></td></tr>";
         }
+        echo "</table></div>";
         $dbh = null;
         }
         catch(PDOException $e)
@@ -771,14 +767,12 @@ font-family:courier;
             $dbh->query($sql);        
             $stmt = $dbh->query($sql);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            
             echo '<h1>' . $array['4'][$_SESSION['lang']] . '</h1><br /><br />
             <form name="form_cr" action="index.php?page=txtedit-db" method="post">
             <div align="left">
                 <input type="hidden" value="' . $row['PID'] . '" name="PID">
                 <strong>' . $array['25'][$_SESSION['lang']] . ':</strong><br />
                 <input type="text" size="50" value="' . $row['ukr'] . '"name="ukr"><br />
-                
                 <strong>' . $array['23'][$_SESSION['lang']] . ':</strong><br />
                 <input type="text" size="50" value="' . $row['eng'] . '"name="eng"><br />
                 <input type="submit" value="' . $array['21'][$_SESSION['lang']] . '"><br /><br />
@@ -821,10 +815,9 @@ font-family:courier;
                 } else {
                     echo "<h3>" . $row['ArtTitleUA'] . "</h3>";
                     $rest = substr($row['ArtContUA'], 0, 150);
-                }
-               
+                }   
             echo "<p> $rest...</p>";
-	        echo "<a href=\"index.php?page=view&ID=" . $row['ID'] . "\">" . $array['9'][$_SESSION['lang']] . "</a><br /><br />";
+	        echo "<a href=\"index.php?page=view&amp;ID=" . $row['ID'] . "\">" . $t12 . "</a><br /><br />";
             }
       ?></div><?php
 	}?>

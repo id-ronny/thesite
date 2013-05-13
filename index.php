@@ -78,7 +78,7 @@ font-family:courier;
                         <a href="index.php?page=viewprfl&amp;PID=<?php echo $_SESSION["PID"];?>"><?php echo $t2; ?></a>
                         <a href="index.php?page=editprfl&amp;PID=<?php echo $_SESSION["PID"];?>"><?php echo $t3; ?></a><br />
                         <a href="index.php?page=create"><?php echo $t4; ?></a>
-                        <a href="index.php?page=adminlang">Ukr/Eng</a><br />
+                        <a href="index.php?page=adminlang"><?php echo $t32 ;?></a><br />
                         <a href="index.php?page=adminpg"><?php echo $t13 ;?></a>
                         <a href="index.php?page=logout"><?php echo $t5 ;?></a><br />
                     </div>
@@ -133,7 +133,7 @@ font-family:courier;
                 if ($_GET["falsepass"]=='1') {
                     echo '<span style="color:red;font-size:12px">Incorrect username or password!</span><br />';
                 } else {
-                    echo '<span style="color:red;font-size:12px">Your account is inactive! Pealse contact admin</span><br />';
+                    echo '<span style="color:red;font-size:12px">' . $t36 . '</span><br />';
                 }?>
                 <div style="position:relative;float:right;top:-1px;right:0px;">    
                     <input type="submit" value="<?php echo $t11; ?>"/>
@@ -213,7 +213,7 @@ font-family:courier;
             $row = mysqli_fetch_array($result);
             mysqli_close($con);
             echo '<h1>' . $t17 . '</h1>
-            <span style="color:red;font-size:12px"><img src="' . $row["Image"] . '" alt="Photo Not Added! Reqirements: JPEG 200x200 to 300x300"/></span><br /><br />';
+            <span style="color:red;font-size:12px"><img src="' . $row["Image"] . '" alt="' . $t29 . '"/></span><br /><br />';
             if($row["Image"]>'0'){
                 echo '<a href="index.php?page=deletepic&amp;PID=' . $row["PID"] . '">' . $t18 . '</a><br /><br />';
             }
@@ -343,42 +343,46 @@ font-family:courier;
 	break;
 	case "create-dbprfl":?>
         <div class="ey"><?php
-            if($_POST["passwd"] == $_POST["passwdcnf"]){
-                $con=mysqli_connect("localhost","admin","qazwsx","my_db");
-                if (mysqli_connect_errno())
-                {
-                    echo "Failed to connect to MySQL: " . mysqli_connect_error();
-                }
-                $result = mysqli_query($con,"SELECT * FROM persons
-                WHERE login='$_POST[login]' AND password='$_POST[email]'");
-                $row = mysqli_fetch_array($result);
-                if ($row["PID"]>'0') {
-                    echo "User with such email OR password exists<br /><br /><a href=\"index.php?page=createprfl\">Try Again<a>";
-                }
-                else{
-                    $sql="INSERT INTO persons (Login, Password, Email, FirstName, LastName, Active, Role) VALUES (
-                    '$_POST[login]','$_POST[passwd]','$_POST[email]',
-                    '$_POST[firstname]','$_POST[lastname]','1','usr')";
-                    if (!mysqli_query($con,$sql)){
-                        die('Error: ' . mysqli_error());
-                    }
-                    mysqli_close($con);
+            if(!empty($_POST["passwd"]) && !empty($_POST["passwdcnf"]) && !empty($_POST["email"]) && !empty($_POST["login"])){
+                if($_POST["passwd"] == $_POST["passwdcnf"]){
                     $con=mysqli_connect("localhost","admin","qazwsx","my_db");
-                    if (mysqli_connect_errno()){
+                    if (mysqli_connect_errno())
+                    {
                         echo "Failed to connect to MySQL: " . mysqli_connect_error();
                     }
                     $result = mysqli_query($con,"SELECT * FROM persons
-                    WHERE login='$_POST[login]'");
+                    WHERE login='$_POST[login]' AND email='$_POST[email]'");
                     $row = mysqli_fetch_array($result);
-                    $_SESSION['admin']=$row["Role"];
-                    $_SESSION['PID']=$row["PID"];
-                    mysqli_query($con,"UPDATE persons SET LVIS_DATE=NOW() WHERE PID='$row[PID]'");
-                    mysqli_close($con);
-                    header( 'Location: index.php?falsepass=2' ) ;                
+                    if ($row["PID"]>'0') {
+                        echo $t39 . "<br /><br /><a href=\"index.php?page=createprfl\">" . $t40 . "<a>";
+                    }
+                    else{
+                        $sql="INSERT INTO persons (Login, Password, Email, FirstName, LastName, Active, Role) VALUES (
+                        '$_POST[login]','$_POST[passwd]','$_POST[email]',
+                        '$_POST[firstname]','$_POST[lastname]','1','usr')";
+                        if (!mysqli_query($con,$sql)){
+                            die('Error: ' . mysqli_error());
+                        }
+                        mysqli_close($con);
+                        $con=mysqli_connect("localhost","admin","qazwsx","my_db");
+                        if (mysqli_connect_errno()){
+                            echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                        }
+                        $result = mysqli_query($con,"SELECT * FROM persons
+                        WHERE login='$_POST[login]'");
+                        $row = mysqli_fetch_array($result);
+                        $_SESSION['admin']=$row["Role"];
+                        $_SESSION['PID']=$row["PID"];
+                        mysqli_query($con,"UPDATE persons SET LVIS_DATE=NOW() WHERE PID='$row[PID]'");
+                        mysqli_close($con);
+                        header( 'Location: index.php?falsepass=2' ) ;                
+                    }
                 }
-            }
-            else{
-                echo "Password confirmation doesn't match!<br /><br /><a href=\"index.php?page=createprfl\">Try Again<a>";
+                else{
+                    echo $t38 . "<br /><br /><a href=\"index.php?page=createprfl\">" . $t40 . "<a>";
+                }
+            }else{
+                echo $t41 . "<br /><br /><a href=\"index.php?page=createprfl\">" . $t40 . "<a>";
             }
             
                ?></div><?php
@@ -396,7 +400,7 @@ font-family:courier;
                 <input type="text" size="30" name="email"/><br /><br />
                 <label><?php echo $t9; ?>:</label><br />
                 <input type="password" size="30" name="passwd"/><br /><br />
-                <label><?php echo $t9; ?>-2:</label><br />
+                <label><?php echo $t37; ?>:</label><br />
                 <input type="password" size="30" name="passwdcnf"/><br /><br />
                 <label><?php echo $t8 ;?>:</label><br />
                 <input type="text" name="login" size="30"/><br /><br />
@@ -484,7 +488,7 @@ font-family:courier;
                     echo "</a><br /><br />";
                 }
                 }
-            echo '<h1>' . $t16 . '</h1><br /><br />
+            echo '<h1>' . $t17 . '</h1><br /><br />
             <form name="form_cr" action="index.php?page=edit-db" method="post">
             <fieldset>
                 <input type="hidden" value="' . $row['ID'] . '" name="ID"/>
@@ -560,17 +564,17 @@ font-family:courier;
                 echo "Failed to connect to MySQL: " . mysqli_connect_error();
             }
             if (array_key_exists('login', $_SESSION)) {
-                
             $result = mysqli_query($con,"SELECT * FROM votes WHERE ID='$_GET[ID]' AND login='$_SESSION[login]'");
             $row = mysqli_fetch_array($result);
             if ($row['score']>'0') {
-                if ($_SESSION['lang']=='eng') {print("Your mark:");} else {print("Ваша оцінка:");}echo "&nbsp;&nbsp;-&nbsp;&nbsp;" . $row['score'];?>
+                print($t33); echo "&nbsp;&nbsp;-&nbsp;&nbsp;" . $row['score'];?>
                 <form name="form_a" action="index.php?page=deletemark" method="post">
                 <div>
                 <input type="hidden" value="<?php echo $row['VID']; ?>" name="VID"/>
                 <input type="submit"  value="<?php echo $t18; ?>"/></div></form><?php
             } else {
-                if ($_SESSION['lang']=='eng') {print("<script type=\"text/javascript\">function myFunction(){alert(\"Thanks for voting!\");}</script>Vote:");} else {print("<script type=\"text/javascript\">function myFunction(){alert(\"Дякуємо за вашу оцінку!\");}</script>Голосувати:");}
+                if ($_SESSION['lang']=='eng') {print("<script type=\"text/javascript\">function myFunction(){alert(\"Thanks for voting!\");}</script>Vote:");
+                } else {print("<script type=\"text/javascript\">function myFunction(){alert(\"Дякуємо за вашу оцінку!\");}</script>Голосувати:");}
             ?><form name="form_cr" action="index.php?page=vote" method="post">
             <div>
             <input type="hidden" value="<?php print($_GET['ID']) ?>" name="ID"/>
@@ -622,10 +626,10 @@ font-family:courier;
                 <input type="hidden" value="<?php print($_GET['ID']); ?>" name="ID"/>
                 <input type="hidden" value="<?php print($_SESSION['login']); ?>" name="login"/>
                 <input type="hidden" value="<?php print($_SESSION['PID']); ?>" name="PID"/>
-                <strong><?php echo $t24; ?>:</strong><br />
+                <strong><?php echo $t34; ?>:</strong><br />
                 <input type="text" size="35" name="ComTitle"/>
                 <br /><br /><strong>
-                <?php echo $t25; ?>:</strong><br />
+                <?php echo $t35; ?>:</strong><br />
                 <textarea cols="50" rows="4" name="ComCont"></textarea><br />
                 <input type="submit" value="<?php echo $t22; ?>"/>
                 </fieldset>
@@ -739,9 +743,9 @@ font-family:courier;
         ?><table border="1">
             <tr>
             <th>Text ID</th>
-            <th>Text Ukr</th>
-            <th>Text Eng</th>
-            <th>Text ID</th>
+            <th><?php echo $t30;?></th>
+            <th><?php echo $t31;?></th>
+            <th><?php echo $t28;?></th>
             </tr>
             <?php
         while($row = $stmt->fetch(PDO::FETCH_ASSOC))
@@ -749,7 +753,7 @@ font-family:courier;
         echo "<tr><td>" . $row["PID"] . "</td>
             <td>" . $row["ukr"] . "</td>
             <td>"  . $row["eng"] . "</td>
-            <td><a href=\"index.php?page=txtedit&amp;PID="  . $row["PID"] . "\"> EDIT </a></td></tr>";
+            <td><a href=\"index.php?page=txtedit&amp;PID="  . $row["PID"] . "\"> " . $t28 . " </a></td></tr>";
         }
         echo "</table></div>";
         $dbh = null;
@@ -767,16 +771,16 @@ font-family:courier;
             $dbh->query($sql);        
             $stmt = $dbh->query($sql);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            echo '<h1>' . $array['4'][$_SESSION['lang']] . '</h1><br /><br />
+            echo '<h1>' . $t17 . '</h1><br /><br />
             <form name="form_cr" action="index.php?page=txtedit-db" method="post">
-            <div align="left">
-                <input type="hidden" value="' . $row['PID'] . '" name="PID">
-                <strong>' . $array['25'][$_SESSION['lang']] . ':</strong><br />
-                <input type="text" size="50" value="' . $row['ukr'] . '"name="ukr"><br />
-                <strong>' . $array['23'][$_SESSION['lang']] . ':</strong><br />
-                <input type="text" size="50" value="' . $row['eng'] . '"name="eng"><br />
-                <input type="submit" value="' . $array['21'][$_SESSION['lang']] . '"><br /><br />
-            </div>';
+            <fieldset>
+                <input type="hidden" value="' . $row['PID'] . '" name="PID"/>
+                <strong>' . $t30 . ':</strong><br />
+                <input type="text" size="48" value="' . $row['ukr'] . '" name="ukr"/><br />
+                <strong>' . $t31 . ':</strong><br />
+                <input type="text" size="48" value="' . $row['eng'] . '" name="eng"/><br />
+                <input type="submit" value="' . $t22 . '"/><br />
+            </fieldset></form>';
         ?></div><?php
             $dbh = null;
             }
@@ -789,7 +793,7 @@ font-family:courier;
         <div class="ey"><?php
             try {
                 $dbh = new PDO("mysql:host=localhost;dbname=my_db", 'admin', 'qazwsx');
-                $count = $dbh->exec("UPDATE std_texts SET ukr='$_POST[ukr]' WHERE PID='$_POST[PID]'");
+                $count = $dbh->exec("UPDATE std_texts SET ukr='$_POST[ukr]', eng='$_POST[eng]' WHERE PID='$_POST[PID]'");
                 header( 'Location: index.php' ) ;
                 $dbh = null;
             }

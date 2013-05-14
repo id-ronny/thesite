@@ -198,7 +198,9 @@ font-family:courier;
 	     echo "<p> e-mail:" . "&nbsp;" . $row["Email"] . "</p>";
          echo "<p>" . $t14 . ":&nbsp;" . $row["REG_DATE"] . "</p>";
 	     echo "<p>" . $t15 . ":&nbsp;" . $row["LVIS_DATE"] . "</p>";
-	     echo "<a href=\"index.php?page=deleteprfl&amp;PID=" . $x . "\">" . $t16 . "</a></div>";
+	     if (@$_SESSION["PID"] == @$row["PID"] || @$_SESSION["admin"] == "adm") {
+            echo "<a href=\"index.php?page=deleteprfl&amp;PID=" . $x . "\">" . $t16 . "</a></div>";
+         }
          mysqli_close($con);
 	break;
 	case "editprfl":?>
@@ -212,6 +214,7 @@ font-family:courier;
             $result = mysqli_query($con,"SELECT * FROM persons WHERE PID='$x'");
             $row = mysqli_fetch_array($result);
             mysqli_close($con);
+            if ($_SESSION["PID"] == $row["PID"] || $_SESSION["admin"] == "adm") {
             echo '<h1>' . $t17 . '</h1>
             <span style="color:red;font-size:12px"><img src="' . $row["Image"] . '" alt="' . $t29 . '"/></span><br /><br />';
             if($row["Image"]>'0'){
@@ -237,6 +240,7 @@ font-family:courier;
       src="http://www.w3.org/Icons/valid-xhtml11" alt="Valid XHTML 1.1" height="31" width="88" /></a>
   </p>
         </div>';
+        } else {echo "Access Denied";}
 	break;
 	case "delete":?>
         <div class="ey"><?php
@@ -411,6 +415,7 @@ font-family:courier;
     break;
 	case "adminpg":?>
         <div class="ey"><?php
+            if ($_SESSION["admin"] == "adm") {
             $con=mysqli_connect("localhost","admin","qazwsx","my_db");
             if (mysqli_connect_errno())
             {
@@ -444,7 +449,7 @@ font-family:courier;
             <td><a href=\"index.php?page=updstat&amp;active=2&amp;PID="  . $row["PID"] . "\">x</a></td></tr>";
             mysqli_close($con);?>
             </table>
-        </div><?php
+        </div><?php } else {echo "Access Denied";}
    break;
    case "updstat":?>
         <div class="ey"><?php
@@ -734,7 +739,7 @@ font-family:courier;
         header('Location: ' . $_SERVER['HTTP_REFERER']);
     break;
     case "adminlang":?>
-        <div class="ey"><?php
+        <div class="ey"><?php if ($_SESSION["admin"] == "adm") {
     try {
         $dbh = new PDO("mysql:host=localhost;dbname=my_db", 'admin', 'qazwsx');
         $sql = "SELECT * FROM std_texts";
@@ -762,9 +767,10 @@ font-family:courier;
         {
         echo $e->getMessage();
         }
+        } else {echo "Access Denied";}
     break;
     case "txtedit":?>
-        <div class="ey"><?php
+        <div class="ey"><?php if ($_SESSION["PID"] == $row["PID"] || $_SESSION["admin"] == "adm") {
             try {
             $dbh = new PDO("mysql:host=localhost;dbname=my_db", 'admin', 'qazwsx');
             $sql = "SELECT * FROM std_texts WHERE PID='$_GET[PID]'";
@@ -788,6 +794,7 @@ font-family:courier;
             {
                 echo $e->getMessage();
             }
+            } else {echo "Access Denied";}
     break;
     case "txtedit-db":?>
         <div class="ey"><?php
@@ -823,7 +830,7 @@ font-family:courier;
             echo "<p> $rest...</p>";
 	        echo "<a href=\"index.php?page=view&amp;ID=" . $row['ID'] . "\">" . $t12 . "</a><br /><br />";
             }
-      ?></div><?php
+      ?></div><?php       
 	}?>
 </body>
 </html>
